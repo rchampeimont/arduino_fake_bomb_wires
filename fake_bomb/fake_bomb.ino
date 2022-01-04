@@ -3,15 +3,15 @@
 // Connections to the circuit: LCD screen
 const int LCD_RS_PIN = 12;
 const int LCD_ENABLE_PIN = 11;
-const int LCD_DATA_PIN_0 = 5;
-const int LCD_DATA_PIN_1 = 4;
-const int LCD_DATA_PIN_2 = 3;
-const int LCD_DATA_PIN_3 = 2;
+const int LCD_DATA_PIN_D4 = 5;
+const int LCD_DATA_PIN_D5 = 4;
+const int LCD_DATA_PIN_D6 = 3;
+const int LCD_DATA_PIN_D7 = 2;
 const int LCD_BACKLIGHT_RED = 8;
 const int LCD_BACKLIGHT_GREEN = 9;
 const int LCD_BACKLIGHT_BLUE = 10;
 
-LiquidCrystal lcd(LCD_RS_PIN, LCD_ENABLE_PIN, LCD_DATA_PIN_0, LCD_DATA_PIN_1, LCD_DATA_PIN_2, LCD_DATA_PIN_3);
+LiquidCrystal lcd(LCD_RS_PIN, LCD_ENABLE_PIN, LCD_DATA_PIN_D4, LCD_DATA_PIN_D5, LCD_DATA_PIN_D6, LCD_DATA_PIN_D7);
 
 const int LCD_ROWS = 2;
 const int LCD_COLS = 16;
@@ -22,17 +22,17 @@ byte curentColor = 0;
 
 void red() {
   if (curentColor == 1) return;
-  analogWrite(LCD_BACKLIGHT_RED, 0);
-  analogWrite(LCD_BACKLIGHT_GREEN, 255);
-  analogWrite(LCD_BACKLIGHT_BLUE, 255);
+  digitalWrite(LCD_BACKLIGHT_RED, 0);
+  digitalWrite(LCD_BACKLIGHT_GREEN, 1);
+  digitalWrite(LCD_BACKLIGHT_BLUE, 1);
   curentColor = 1;
 }
 
 void blue() {
   if (curentColor == 0) return;
-  analogWrite(LCD_BACKLIGHT_RED, 0);
-  analogWrite(LCD_BACKLIGHT_GREEN, 0);
-  analogWrite(LCD_BACKLIGHT_BLUE, 0);
+  digitalWrite(LCD_BACKLIGHT_RED, 0);
+  digitalWrite(LCD_BACKLIGHT_GREEN, 0);
+  digitalWrite(LCD_BACKLIGHT_BLUE, 0);
   curentColor = 0;
 }
 
