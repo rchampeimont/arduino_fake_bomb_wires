@@ -83,6 +83,9 @@ void loop() {
   } else {
     remainingTime = 0;
     red();
+    lcd.clear();
+    lcd.write("*** BOOM ***");
+    while (true);
   }
 
   formatTime(remainingTime, s);
