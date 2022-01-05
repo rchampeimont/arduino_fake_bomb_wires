@@ -1,3 +1,5 @@
+// Code designed for Arduino Uno R3
+
 #include <LiquidCrystal.h>
 
 // Connections to the circuit: LCD screen
@@ -18,12 +20,23 @@ const int LCD_COLS = 16;
 
 const int TOTAL_WIRES = 6;
 const int CUTTABLE_WIRES[TOTAL_WIRES] = {A0, A1, A2, A3, A4, A5};
+const bool WIRES_TO_CUT[TOTAL_WIRES] = { 0, 1, 1, 0, 1, 0 };
 
 const unsigned long TOTAL_TIME = 3600 * 1000L;
 
+bool wireStates[TOTAL_WIRES];
 byte currentColor = 0;
+unsigned long elapsedTime, remainingTime;
 
-void red() {
+void setDefaultBG() {
+  if (currentColor == 0) return;
+  digitalWrite(LCD_BACKLIGHT_RED, 0);
+  digitalWrite(LCD_BACKLIGHT_GREEN, 0);
+  digitalWrite(LCD_BACKLIGHT_BLUE, 0);
+  currentColor = 0;
+}
+
+void setRedBG() {
   if (currentColor == 1) return;
   digitalWrite(LCD_BACKLIGHT_RED, 0);
   digitalWrite(LCD_BACKLIGHT_GREEN, 1);
@@ -31,12 +44,12 @@ void red() {
   currentColor = 1;
 }
 
-void blue() {
-  if (currentColor == 0) return;
-  digitalWrite(LCD_BACKLIGHT_RED, 0);
+void setGreenBG() {
+  if (currentColor == 2) return;
+  digitalWrite(LCD_BACKLIGHT_RED, 1);
   digitalWrite(LCD_BACKLIGHT_GREEN, 0);
-  digitalWrite(LCD_BACKLIGHT_BLUE, 0);
-  currentColor = 0;
+  digitalWrite(LCD_BACKLIGHT_BLUE, 1);
+  currentColor = 2;
 }
 
 void formatTime(unsigned long t, char str[13]) {
@@ -49,6 +62,8 @@ void formatTime(unsigned long t, char str[13]) {
 }
 
 void setup() {
+  Serial.begin(9600); // for debug
+  
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(LCD_BACKLIGHT_RED, OUTPUT);
   pinMode(LCD_BACKLIGHT_GREEN, OUTPUT);
@@ -56,41 +71,125 @@ void setup() {
 
   for (int i=0; i<TOTAL_WIRES; i++) {
     pinMode(CUTTABLE_WIRES[i], INPUT_PULLUP);
+    wireStates[i] = digitalRead(CUTTABLE_WIRES[i]);
   }
-  
+
+  setDefaultBG();
+
   lcd.begin(LCD_COLS, LCD_ROWS);
   lcd.clear();
   lcd.print("Ready");
 
-  blue();
+  Serial.println("Ready");
 }
 
-// Show wire state
-void debugWires() {
-  lcd.setCursor(LCD_COLS - TOTAL_WIRES, 1);
+int detectWireStateChange() {
   for (int i=0; i<TOTAL_WIRES; i++) {
-    lcd.write(digitalRead(CUTTABLE_WIRES[i]) ? '1' : '0');
+    int newValue = digitalRead(CUTTABLE_WIRES[i]);
+    if (newValue != wireStates[i]) {
+      wireStates[i] = newValue;
+      return i;
+    }
+  }
+  return -1;
+}
+
+void displayCurrentState() {
+  lcd.setCursor(5, 1);
+  int missingWires = 0;
+  for (int i=0; i<TOTAL_WIRES; i++) {
+    if (WIRES_TO_CUT[i]) {
+      if (wireStates[i]) {
+        // Wire was correctly cut
+        lcd.print("*");
+      } else {
+        missingWires++;
+      }
+    }
+  }
+
+  // This is just to erase previously shown asterisks
+  for (int i=0; i<missingWires; i++) {
+    lcd.print(" ");
+  }
+}
+
+void displayTimer() {
+  char s[13];
+  formatTime(remainingTime, s);
+  lcd.home();
+  lcd.print(s);
+}
+
+bool isIncorrectWriteCut() {
+  for (int i=0; i<TOTAL_WIRES; i++) {
+    if (wireStates[i] == 1 && WIRES_TO_CUT[i] == 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool areAllCorrectWiresCut() {
+  for (int i=0; i<TOTAL_WIRES; i++) {
+    if (wireStates[i] == 0 && WIRES_TO_CUT[i] == 1) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void handleWireStateChange(int wireWithNewState) {
+  Serial.print("Wire ");
+  Serial.print(wireWithNewState);
+  if (wireStates[wireWithNewState]) {
+    Serial.print(" was cut");
+    if (WIRES_TO_CUT[wireWithNewState]) {
+      Serial.println(" => correct");
+      setGreenBG();
+      delay(200);
+    } else {
+      Serial.println(" => INCORRECT");
+    }
+  } else {
+    Serial.println(" was reconnected");
+  }
+  
+  if (isIncorrectWriteCut()) {
+    setRedBG();
+  } else {
+    setDefaultBG();
   }
 }
 
 void loop() {
-  char s[13];
-  unsigned long elapsedTime, remainingTime;
-  
   elapsedTime = millis();
   if (elapsedTime < TOTAL_TIME) {
     remainingTime = TOTAL_TIME - elapsedTime;
   } else {
     remainingTime = 0;
-    red();
+    setRedBG();
     lcd.clear();
     lcd.write("*** BOOM ***");
     while (true);
   }
 
-  formatTime(remainingTime, s);
-  lcd.home();
-  lcd.print(s);
+  displayTimer();
 
-  debugWires(); // Show wire state
+  int wireWithNewState = detectWireStateChange();
+  if (wireWithNewState >= 0) {
+    handleWireStateChange(wireWithNewState);
+  }
+
+  displayCurrentState();
+
+  if (areAllCorrectWiresCut() && !isIncorrectWriteCut()) {
+    // Win
+    setGreenBG();
+    lcd.clear();
+    lcd.write("BOMB DEFUSED");
+    lcd.setCursor(0, 1);
+    lcd.write("CODE = 1234");
+    while (true);
+  }
 }
