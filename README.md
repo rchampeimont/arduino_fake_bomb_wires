@@ -8,8 +8,8 @@ Features:
 * Countdown to 0
 * When no time is left, screen goes red and displays "BOOM"
 * For each correct wire that is cut, an asterisk displays on the screen
-* when all the correct wires are cut, timer stops, screen goes green and displays a secret code 
-* If an incorrect wire is cut, remaining time is divided by two (only on first mistake).
+* When all the correct wires are cut, timer stops, screen goes green and displays a secret code 
+* If an incorrect wire is cut, remaining time is divided by two (only on first mistake)
 * The bomb can still be defused if an incorrect wire has been cut, provided the wire is reconnected (you could provide players crocodile clips or even solder & iron)
 
 You can power it the way you want, in my case I used a 9V battery (connected to Vin and GND).
