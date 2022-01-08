@@ -22,11 +22,13 @@ const int TOTAL_WIRES = 6;
 const int CUTTABLE_WIRES[TOTAL_WIRES] = {A0, A1, A2, A3, A4, A5};
 const bool WIRES_TO_CUT[TOTAL_WIRES] = { 0, 1, 1, 0, 1, 0 };
 
-const unsigned long TOTAL_TIME = 3600 * 1000L;
+//const unsigned long TOTAL_TIME = 3600 * 1000L;
+const unsigned long TOTAL_TIME = 30 * 1000L;
 
+unsigned long remainingTime = TOTAL_TIME;
+unsigned long lastTimeUpdatedAt = 0;
 bool wireStates[TOTAL_WIRES];
 byte currentColor = 0;
-unsigned long elapsedTime, remainingTime;
 
 void setDefaultBG() {
   if (currentColor == 0) return;
@@ -58,7 +60,9 @@ void formatTime(unsigned long t, char str[13]) {
   unsigned long h = totalSeconds / 3600;
   unsigned long m = (totalSeconds - 3600*h) / 60;
   unsigned long s = totalSeconds - 3600*h - 60*m;
-  snprintf(str, 13, "%02lu:%02lu:%02lu.%03lu", h, m, s, ms);
+  
+  //snprintf(str, 13, "%02lu:%02lu:%02lu.%03lu", h, m, s, ms); // uncomment to display milliseconds
+  snprintf(str, 13, "%02lu:%02lu:%02lu", h, m, s);
 }
 
 void setup() {
@@ -71,14 +75,13 @@ void setup() {
 
   for (int i=0; i<TOTAL_WIRES; i++) {
     pinMode(CUTTABLE_WIRES[i], INPUT_PULLUP);
-    wireStates[i] = digitalRead(CUTTABLE_WIRES[i]);
+    wireStates[i] = LOW; // wires are initially tied to GND
   }
 
   setDefaultBG();
 
   lcd.begin(LCD_COLS, LCD_ROWS);
   lcd.clear();
-  lcd.print("Ready");
 
   Serial.println("Ready");
 }
@@ -95,7 +98,7 @@ int detectWireStateChange() {
 }
 
 void displayCurrentState() {
-  lcd.setCursor(5, 1);
+  lcd.setCursor(0, 1);
   int missingWires = 0;
   for (int i=0; i<TOTAL_WIRES; i++) {
     if (WIRES_TO_CUT[i]) {
@@ -117,7 +120,7 @@ void displayCurrentState() {
 void displayTimer() {
   char s[13];
   formatTime(remainingTime, s);
-  lcd.home();
+  lcd.setCursor(0, 0);
   lcd.print(s);
 }
 
@@ -162,12 +165,31 @@ void handleWireStateChange(int wireWithNewState) {
   }
 }
 
-void loop() {
-  elapsedTime = millis();
-  if (elapsedTime < TOTAL_TIME) {
-    remainingTime = TOTAL_TIME - elapsedTime;
-  } else {
+void updateRemainingTime() {
+  if (remainingTime == 0) return;
+  
+  unsigned long now = millis();
+  if (lastTimeUpdatedAt == now) return;
+  unsigned long elapsedTimeSinceLastUpdate = now - lastTimeUpdatedAt;
+
+  if (isIncorrectWriteCut()) {
+    // Time goes down twice as fast if incorrect wire is cut
+    elapsedTimeSinceLastUpdate *= 2;
+  }
+
+  if (elapsedTimeSinceLastUpdate >= remainingTime) {
     remainingTime = 0;
+  } else {
+    remainingTime -= elapsedTimeSinceLastUpdate;
+  }
+  
+  lastTimeUpdatedAt = now;
+}
+
+void loop() {
+  updateRemainingTime();
+  
+  if (remainingTime == 0) {
     setRedBG();
     lcd.clear();
     lcd.write("*** BOOM ***");
