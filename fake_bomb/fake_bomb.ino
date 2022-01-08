@@ -20,7 +20,7 @@ const int LCD_COLS = 16;
 
 const int TOTAL_WIRES = 6;
 const int CUTTABLE_WIRES[TOTAL_WIRES] = {A0, A1, A2, A3, A4, A5};
-const bool WIRES_TO_CUT[TOTAL_WIRES] = { 0, 1, 1, 0, 1, 0 };
+const bool WIRES_TO_CUT[TOTAL_WIRES] = { 1, 0, 1, 1, 0, 0 };
 
 const unsigned long TOTAL_TIME = 3600 * 1000L;
 //const unsigned long TOTAL_TIME = 30 * 1000L;
@@ -211,7 +211,7 @@ void loop() {
     lcd.clear();
     lcd.write("BOMB DEFUSED");
     lcd.setCursor(0, 1);
-    lcd.write("CODE = 1234");
+    lcd.write("CODE = 6575");
     while (true);
   }
 }
