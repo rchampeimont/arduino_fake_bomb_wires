@@ -149,8 +149,9 @@ void handleWireStateChange(int wireWithNewState) {
     Serial.print(" was cut");
     if (WIRES_TO_CUT[wireWithNewState]) {
       Serial.println(" => correct");
+      displayCurrentState();
       setGreenBG();
-      delay(200);
+      delay(1000);
     } else {
       Serial.println(" => INCORRECT");
     }
