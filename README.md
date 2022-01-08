@@ -8,8 +8,8 @@ Features:
 * Countdown to 0
 * When no time is left, screen goes red and displays "BOOM"
 * For each correct wire that is cut, an asterisk displays on the screen
-* when all the correct wires are cut, timer stops, screen goes green and displays a secret code 
-* If an incorrect wire is cut, remaining time is divided by two (only on first mistake).
+* When all the correct wires are cut, timer stops, screen goes green and displays a secret code 
+* As long as an incorect wire is cut, time goes down twice as fast and screen is red
 * The bomb can still be defused if an incorrect wire has been cut, provided the wire is reconnected (you could provide players crocodile clips or even solder & iron)
 
 You can power it the way you want, in my case I used a 9V battery (connected to Vin and GND).
@@ -20,3 +20,6 @@ You can power it the way you want, in my case I used a 9V battery (connected to 
 ## Example breadboard setup
 The idea is to have the wires to cut accessible from outside the bomb while the rest of the circuit is sealed. The wires are soldered to prevent the players from just pulling the wires instead of cutting them.
 ![Breadboard](fake_bomb_breadboard.png?raw=true)
+
+## Photos
+![Photo of LCD screen](photo_LCD.jpg?raw=true)
