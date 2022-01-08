@@ -22,4 +22,5 @@ The idea is to have the wires to cut accessible from outside the bomb while the 
 ![Breadboard](fake_bomb_breadboard.png?raw=true)
 
 ## Photos
-![Photo of LCD screen](photo_LCD.jpg?raw=true)
+Development version on breadboard:
+![Photo of development version](photo_dev.jpg?raw=true)
