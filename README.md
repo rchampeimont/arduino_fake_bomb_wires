@@ -4,4 +4,7 @@ A prop bomb where you need to cut the right wires. This was used as part of an e
 You can power it the way you want, in my case I used a 9V battery (connected to Vin and GND).
 
 ## Schematic
-![Reset circuit](fake_bomb_schematic.png?raw=true)
+![Schematic](fake_bomb_schematic.png?raw=true)
+
+## Example breadboard setup
+![Breadboard](fake_bomb_breadboard.png?raw=true)
