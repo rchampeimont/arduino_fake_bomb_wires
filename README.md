@@ -17,10 +17,6 @@ You can power it the way you want, in my case I used a 9V battery (connected to 
 ## Schematic
 ![Schematic](fake_bomb_schematic.png?raw=true)
 
-## Example breadboard setup
-The idea is to have the wires to cut accessible from outside the bomb while the rest of the circuit is sealed. The wires are soldered to prevent the players from just pulling the wires instead of cutting them.
-![Breadboard](fake_bomb_breadboard.png?raw=true)
-
 ## Photos
 Development version on breadboard:
 ![Photo of development version](photo_dev.jpg?raw=true)
