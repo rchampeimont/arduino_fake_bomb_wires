@@ -18,5 +18,5 @@ You can power it the way you want, in my case I used a 9V battery (connected to 
 ![Schematic](fake_bomb_schematic.png?raw=true)
 
 ## Photos
-Development version on breadboard:
+Here is what is looks like:
 ![Photo of development version](photo_dev.jpg?raw=true)
