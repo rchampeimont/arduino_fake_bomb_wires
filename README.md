@@ -1,6 +1,8 @@
 # arduino_fake_bomb_wires
 A prop bomb where you need to cut the right wires. This was used as part of an escape game we organized for our family.
 
+See it in action in this YouTube video: https://www.youtube.com/watch?v=fAxLHOgLmgc
+
 General idea: To "defuse" the "bomb", the players need to cut the right wires (so you need to solder new wires for every game). When the bomb is defused, it displays a secret code (which could for example allow to open a lock sealing the bomb or anything else in an escape game).
 
 Features:
