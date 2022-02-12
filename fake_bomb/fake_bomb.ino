@@ -212,7 +212,7 @@ void loop() {
     lcd.clear();
     lcd.write("BOMB DEFUSED");
     lcd.setCursor(0, 1);
-    lcd.write("CODE = 6575");
+    lcd.write("CODE = 750");
     while (true);
   }
 }
