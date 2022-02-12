@@ -21,4 +21,4 @@ You can power it the way you want, in my case I used a 9V battery (connected to 
 
 ## Photos
 Here is what is looks like:
-![Photo of development version](photo_dev.jpg?raw=true)
+![Photo of final result](final_result.jpg?raw=true)
