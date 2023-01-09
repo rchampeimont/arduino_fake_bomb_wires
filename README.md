@@ -19,6 +19,8 @@ You can power it the way you want, in my case I used a 9V battery (connected to 
 ## Schematic
 ![Schematic](fake_bomb_schematic.png?raw=true)
 
+The LCD screen I used is compatible with the Hitachi HD44780 standard in order to be usable with the https://www.arduino.cc/reference/en/libraries/liquidcrystal/ Arduino module but with the nice addition of being able to change the background color. The specific LCD screen I used is part 399 from Adafruit, cf https://www.adafruit.com/product/399 which I ordered here from DigiKey: https://www.digikey.fr/fr/products/detail/adafruit-industries-llc/399/5774232
+
 ## Photos
 Here is what is looks like:
 ![Photo of final result](final_result.jpg?raw=true)
